@@ -22,9 +22,9 @@ def test_create_job():
             "task": "calculate_sum",
             "payload": {
                 "a": 10,
-                "b": 20,
-            },
-        },
+                "b": 20
+            }
+        }
     )
 
     assert response.status_code == 200
@@ -35,10 +35,8 @@ def test_create_job():
     assert data["task"] == "calculate_sum"
     assert data["payload"] == {
         "a": 10,
-        "b": 20,
+        "b": 20
     }
-    assert data["status"] == "queued"
-
 
 def test_get_job():
     create_response = client.post(

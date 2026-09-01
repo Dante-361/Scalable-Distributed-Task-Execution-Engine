@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from uuid import UUID, uuid4
 
@@ -18,5 +18,7 @@ class Job(BaseModel):
     task: str
     payload: dict
     status: JobStatus = JobStatus.QUEUED
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc)
+    )
     result: object | None = None 
