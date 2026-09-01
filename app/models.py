@@ -8,6 +8,7 @@ class JobStatus(str, Enum):
     QUEUED = "queued"
     RUNNING = "running"
     COMPLETED = "completed"
+    FAILED = "failed"
 
 class JobCreate(BaseModel):
     task: str
@@ -22,3 +23,4 @@ class Job(BaseModel):
         default_factory=lambda: datetime.now(timezone.utc)
     )
     result: object | None = None 
+    error: str | None = None

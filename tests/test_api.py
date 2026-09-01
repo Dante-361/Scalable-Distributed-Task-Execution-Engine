@@ -64,3 +64,44 @@ def test_get_nonexistent_job():
     )
 
     assert response.status_code == 404
+
+def test_successful_task():
+    response = client.post(
+        "/jobs",
+        json={
+            "task": "calculate_sum",
+            "payload": {
+                "a": 10,
+                "b": 20
+            }
+        }
+    )
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert data["status"] == "completed"
+    assert data["result"] == 30
+    assert data["error"] is None
+
+
+def test_failed_task():
+    response = client.post(
+        "/jobs",
+        json={
+            "task": "divide",
+            "payload": {
+                "a": 10,
+                "b": 0
+            }
+        }
+    )
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert data["status"] == "failed"
+    assert data["result"] is None
+    assert data["error"] == "division by zero"
