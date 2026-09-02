@@ -6,9 +6,7 @@ from app.models import JobStatus
 from app.tasks import TASKS
 
 
-def run_worker():
-    print("Worker started")
-
+def run_worker(worker_id):
     while True:
         job_id = job_queue.get()
 
@@ -18,7 +16,7 @@ def run_worker():
             if job is None:
                 continue
 
-            print(f"Processing job {job.id}")
+            print(f"Worker {worker_id} Processing job {job.id}")
 
             job.status = JobStatus.RUNNING
 
@@ -31,7 +29,7 @@ def run_worker():
                 job.result = task_function(job.payload)
                 job.status = JobStatus.COMPLETED
 
-                print(f"Completed job {job.id}")
+                print(f"Worker {worker_id} Completed job {job.id}")
 
             except Exception as error:
                 job.status = JobStatus.FAILED
@@ -43,9 +41,13 @@ def run_worker():
             job_queue.task_done()
 
 
-def start_worker():
-    thread = threading.Thread(
-        target=run_worker,
-        daemon=True
-    )
-    thread.start()
+def start_workers(num_workers: int = 1):
+
+    for i in range(num_workers):
+        thread = threading.Thread(
+            target=run_worker,
+            args = (i + 1,),
+            daemon=True
+        )
+        thread.start()
+        print(f"Worker {i + 1} started")

@@ -1,4 +1,4 @@
-from app.worker import start_worker
+from app.worker import start_workers
 
 from uuid import UUID
 
@@ -8,7 +8,7 @@ from app.models import Job, JobCreate
 from app.storage import jobs
 from app.queue import job_queue
 
-start_worker()
+start_workers(3)
 app = FastAPI()
 
 @app.get("/")
